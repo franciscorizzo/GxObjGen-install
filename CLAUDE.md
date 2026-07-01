@@ -48,3 +48,19 @@ Quando o usuário pedir para **reportar um bug** ou **enviar uma sugestão** sob
 4. Depois de criar, **devolva o link da issue** ao usuário.
 
 Nunca invente versão/erro — use o que o `gx_whoami` e o usuário fornecerem.
+
+## Compartilhar um aprendizado (realimentar as referências)
+Ao descobrir um padrão útil, um gotcha ou uma receita **genérica** sobre o GxObjGen/GeneXus (algo que
+ajudaria qualquer usuário, não só esta KB), você pode registrá-lo para virar referência:
+1. **SANITIZE — regra inegociável.** O texto deve ser **genérico sobre a ferramenta**. **NUNCA**
+   inclua nomes de objetos, atributos, lógica de negócio, dados ou segredos **desta KB** — isso é
+   confidencial e não pode vazar para outros usuários. Descreva o padrão de forma abstrata
+   ("ao criar Procedure que retorna SDT…"), não o caso concreto do cliente.
+2. **Peça confirmação do usuário** com o texto já sanitizado antes de enviar.
+3. **Abra como issue de conhecimento:**
+   ```bash
+   gh issue create --repo franciscorizzo/GxObjGen-install --label knowledge \
+     --title "<dica curta>" --body "<aprendizado genérico + tool/contexto + como aplicar>"
+   ```
+   (sem `gh`, gere o link `.../issues/new?labels=knowledge&title=…&body=…`).
+Esses aprendizados são triados pelo mantenedor e promovidos para a skill/`docs` nas próximas versões.

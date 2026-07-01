@@ -1,0 +1,39 @@
+name: "🧠 Aprendizado / Dica"
+description: Compartilhar um padrão, gotcha ou receita GENÉRICO sobre o GxObjGen/GeneXus
+labels: ["knowledge"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use para agregar conhecimento **genérico** sobre a ferramenta — algo que ajudaria qualquer
+        usuário. ⚠️ **Não inclua** nomes de objetos, lógica de negócio ou dados da sua KB.
+  - type: textarea
+    id: learning
+    attributes:
+      label: O aprendizado
+      description: O padrão, gotcha ou receita — descrito de forma genérica (sobre a tool/GeneXus, não sobre a sua KB).
+      placeholder: "Ex.: ao criar Procedure que retorna SDT, tipar a variável com basedOnObject evita o erro spc0047."
+    validations:
+      required: true
+  - type: input
+    id: tools
+    attributes:
+      label: Tool(s) / contexto
+      placeholder: "gx_create_or_update_procedure, variáveis tipadas"
+  - type: textarea
+    id: apply
+    attributes:
+      label: Como aplicar / recomendação
+      description: O que fazer da próxima vez, ou o que a referência deveria dizer.
+  - type: input
+    id: version
+    attributes:
+      label: Versão do GxObjGen (opcional)
+      placeholder: "1.7.0"
+  - type: checkboxes
+    id: sanitized
+    attributes:
+      label: Confidencialidade
+      options:
+        - label: Confirmo que este texto é genérico e NÃO contém nomes, dados ou lógica da minha KB.
+          required: true

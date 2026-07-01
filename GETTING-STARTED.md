@@ -49,5 +49,9 @@ O canal é a aba **Issues** deste repositório. Dois jeitos:
 - **Manualmente:** abra em `Issues → New issue` e escolha **🐛 Bug** ou **💡 Sugestão** — o formulário
   já pede o que precisamos.
 
+Descobriu um **padrão/dica genérica** que ajudaria qualquer usuário? Use o template **🧠 Aprendizado**
+(ou peça ao Claude *"registra esse aprendizado"*). Ele vira referência nas próximas versões. ⚠️ Só
+conhecimento **genérico** sobre a ferramenta — nunca dados ou lógica da sua KB.
+
 Em qualquer caso, inclua: **versão** (`gx_whoami`), **GeneXus 17/18** (e upgrade), o que você pediu, a
 **mensagem de erro** e o passo para reproduzir. Logs do IDE em `%LOCALAPPDATA%\GeneXus`.
