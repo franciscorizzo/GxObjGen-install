@@ -19,9 +19,18 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 
-# 0) elevacao
+# 0) elevacao — a instalacao escreve em Program Files + roda /install (exige admin).
+#    Se rodar sem admin, o script se RE-LANCA elevado via UAC (basta confirmar o prompt).
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
-if (-not $isAdmin) { throw "Rode este script como ADMINISTRADOR (escreve em Program Files)." }
+if (-not $isAdmin) {
+  Write-Host 'Sem privilegios de admin - reabrindo elevado (confirme o prompt do UAC)...' -ForegroundColor Yellow
+  $q = [char]34   # aspas dupla, p/ citar caminhos com espaco sem escape
+  $psArgs = "-NoExit -NoProfile -ExecutionPolicy Bypass -File $q$PSCommandPath$q"
+  if ($GxDir) { $psArgs += " -GxDir $q$GxDir$q" }
+  try { Start-Process powershell -Verb RunAs -ArgumentList $psArgs }
+  catch { Write-Host 'Elevacao negada/cancelada. Abra um PowerShell como Administrador e rode o install.ps1 de novo.' -ForegroundColor Red; exit 1 }
+  return   # o trabalho continua na janela elevada (que fica aberta, -NoExit)
+}
 
 # 1) DLL empacotada (ao lado deste script, em Packages\)
 $dll = Join-Path $PSScriptRoot "Packages\GxObjGen.dll"

@@ -17,16 +17,21 @@ altera objetos da sua KB **ao vivo** — sem exportar nada, tudo em `127.0.0.1`.
    ```powershell
    git clone https://github.com/franciscorizzo/GxObjGen-install
    ```
-2. **Feche o GeneXus** e abra um **PowerShell como Administrador** na pasta do projeto:
+2. **Feche o GeneXus** e rode o instalador num PowerShell:
    ```powershell
    powershell -ExecutionPolicy Bypass -File install.ps1
    ```
-   O script detecta o GeneXus 17 e/ou 18 instalado, copia a DLL e registra a extensão.
+   A instalação precisa de **admin** (escreve em Program Files). Se você rodar de um PowerShell
+   comum, o script **se re-lança elevado via UAC** — é só confirmar o prompt; o trabalho continua
+   numa janela de administrador (que fica aberta pra você ver o resultado). O script detecta o
+   GeneXus 17 e/ou 18, copia a DLL e registra a extensão.
    (Para uma versão específica: `... -File install.ps1 -GxDir "C:\Program Files (x86)\GeneXus\GeneXus18"`.)
 3. **Registre o MCP no Claude Code** (uma vez):
    ```
    claude mcp add --transport http genexus http://127.0.0.1:8780/mcp
    ```
+   > O **Claude Code do dia a dia NÃO precisa de admin** — a elevação é só para o passo de instalação.
+   > Depois, o MCP roda em loopback (`127.0.0.1`) e o Claude Code comum conversa com ele normalmente.
 
 ## Uso
 1. Abra o **GeneXus** e a **sua KB**. A extensão sobe o servidor MCP automaticamente.

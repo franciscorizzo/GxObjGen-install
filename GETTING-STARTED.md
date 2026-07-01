@@ -15,6 +15,13 @@ e a resolver os tropeços mais comuns.
 
 ## FAQ / Troubleshooting
 
+**Preciso rodar o Claude Code como administrador?**
+Não. Só o **passo de instalação** (`install.ps1`) precisa de admin, porque escreve em Program Files
+e registra a extensão — e o script já **se re-lança via UAC** se você rodar de um PowerShell comum.
+O **Claude Code do dia a dia não precisa de admin**: depois de instalada, a extensão roda dentro do
+GeneXus e o MCP é loopback. Evite pedir ao Claude Code para rodar o `install.ps1` (ele precisaria
+estar elevado); prefira rodar o instalador você mesmo num PowerShell.
+
 **As tools `mcp__genexus__gx_*` não aparecem / dão schema antigo.**
 Rode `/mcp` no Claude Code e reconecte o servidor `genexus`. O cliente não re-busca a lista de tools
 sozinho depois que o servidor reinicia (ex.: após atualizar a extensão).
