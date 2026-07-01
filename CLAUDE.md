@@ -29,10 +29,15 @@ Há uma skill **`gxobjgen`** com o fluxo completo e o catálogo — use-a.
 - Primeiros passos e problemas comuns: `GETTING-STARTED.md`.
 
 ## Reportar bug ou sugestão (você pode abrir a issue pelo usuário)
-Quando o usuário pedir para **reportar um bug** ou **enviar uma sugestão** sobre o GxObjGen:
+**Seja proativo:** sempre que uma tool `mcp__genexus__gx_*` **falhar/retornar erro**, o IDE **recusar
+a extensão** (ex.: "cannot load package… expecting version 'X'"), ou algo se comportar de forma
+inesperada — **ofereça na hora reportar o bug** (não espere o usuário pedir). Também reporte quando o
+usuário pedir explicitamente, ou quando quiser enviar uma sugestão.
+
+Ao reportar:
 1. **Colete o contexto** antes de escrever: rode `gx_whoami` (versão da extensão + KB + modo) e
    pergunte a versão do GeneXus (17/18 e upgrade) se não for óbvia. Para bug, capture o passo e a
-   mensagem de erro exata.
+   mensagem de erro exata (inclua o número da versão 'X' se o IDE recusou o pacote).
 2. **Abra a issue** no repositório `franciscorizzo/GxObjGen-install` via o GitHub CLI (peça
    confirmação do texto antes de enviar):
    ```bash
