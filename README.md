@@ -52,6 +52,8 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
 ## Novidades desta versão (1.7.0)
+> Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
+
 - **Erro de validação real:** quando uma criação/edição falha, a IA recebe o **motivo exato**
   (ex.: função inexistente, atributo inválido) em vez de um "Validation failed" genérico.
 - **Busca indexada (`gx_search_indexed`):** procura no conteúdo da KB usando o **índice do próprio
