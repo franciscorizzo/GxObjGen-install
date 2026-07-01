@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Catálogo de deploy no formato oficial (Deploying GXextensions).
+     Usado pela ferramenta Updater do Platform SDK:
+       "$(GX_SDK_DIR)\Tools\Updater" Catalog.xml <pastaBuild> "$(GX_PROGRAM_DIR)\" <Configuration>
+     Alternativa sem SDK: deploy.ps1 (copia para Packages + genexus /install). -->
+<Catalog>
+  <File Name="GxObjGen.dll" Target="Packages" />
+  <File Name="GxObjGen.pdb" Target="Packages" />
+</Catalog>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Package xmlns='http://schemas.genexus.com/addin/v1.0'
+         id='8A92A763-45E2-4A43-A81F-756AEEF232B7' name='GxObjGen'>
+
+  <Resources>
+    <Resource type="strings" name="GxObjGen.Resources"/>
+  </Resources>
+
+  <Commands>
+    <CommandDefinition id="CreateProc" resourceId="CmdCreateProc"/>
+    <CommandDefinition id="ShowWindow" resourceId="CmdShowWindow"/>
+    <CommandDefinition id="ToggleMcp" resourceId="CmdToggleMcp"/>
+  </Commands>
+
+  <ToolWindows>
+    <ToolWindow id="4938633D-4FA1-4ADA-8913-383351B12EB9"
+                title="TwTitle" location="right" visible="true"/>
+  </ToolWindows>
+
+  <Groups>
+    <Group id="GxObjGenGroup">
+      <Command refid="ShowWindow"/>
+      <Command refid="CreateProc"/>
+      <Command refid="ToggleMcp"/>
+    </Group>
+  </Groups>
+
+  <Menus>
+    <Menu type="menubar">
+      <Popup name="GX Tools" insertBefore="Help">
+        <Group refid="GxObjGenGroup"/>
+      </Popup>
+    </Menu>
+  </Menus>
+
+</Package>
