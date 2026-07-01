@@ -34,6 +34,16 @@ altera objetos da sua KB **ao vivo** — sem exportar nada, tudo em `127.0.0.1`.
    `gx_targets`. Com várias KBs abertas, cada tool aceita o parâmetro `kb` (o slug da KB); com uma
    só, é opcional. O endpoint `:8780` é um **gateway**: 1 porta para todas as KBs abertas.
 
+## Referência para o Claude Code (recomendado)
+Este repositório também inclui material que ensina o Claude Code a **usar bem** o MCP — rode o Claude
+Code **dentro da pasta clonada** para ele carregar automaticamente:
+- **`CLAUDE.md`** — regras de ouro (começar por `gx_whoami`, preferir `gx_search_indexed`, respeitar
+  read-only, validar com `gx_specify`, nunca reportar "ok" sem checar).
+- **`.claude/skills/gxobjgen/`** — a skill com o fluxo completo, pré-requisitos e gotchas. Para valer
+  em qualquer pasta, copie-a para `~/.claude/skills/gxobjgen/`.
+- **`docs/tools.md`** — catálogo das ~71 tools por categoria.
+- **`GETTING-STARTED.md`** — primeiros passos e troubleshooting (MCP não conecta, read-only, U14…).
+
 ## Segurança — leia
 - **Somente leitura por padrão** (deny-by-default). A IA pode ler/documentar/analisar, mas **não
   altera** a KB. É o modo seguro para KB de cliente.
