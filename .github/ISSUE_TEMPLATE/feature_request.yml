@@ -1,0 +1,23 @@
+name: "💡 Sugestão"
+description: Sugerir uma melhoria ou nova capacidade
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qual o problema / a motivação
+      description: O que você está tentando fazer e onde a ferramenta hoje atrapalha ou falta.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Sua sugestão
+      description: Como você imagina que deveria funcionar. Exemplos ajudam.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versão do GxObjGen (opcional)
+      placeholder: "1.7.0"

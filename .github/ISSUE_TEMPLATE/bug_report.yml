@@ -1,0 +1,46 @@
+name: "🐛 Bug"
+description: Relatar um problema no GxObjGen
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Versão do GxObjGen
+      description: "Rode `gx_whoami` no Claude Code — linha `Extensao GxObjGen: vX.Y.Z`."
+      placeholder: "1.7.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: genexus
+    attributes:
+      label: Versão do GeneXus
+      options:
+        - "GeneXus 18"
+        - "GeneXus 17"
+        - "Outra (informe abaixo)"
+    validations:
+      required: true
+  - type: input
+    id: upgrade
+    attributes:
+      label: Upgrade do GeneXus (se souber)
+      placeholder: "U13, U14…"
+  - type: textarea
+    id: what
+    attributes:
+      label: O que você pediu / fez
+      description: O prompt ou a ação, e qual tool foi usada (se souber).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: O que esperava vs. o que aconteceu
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Mensagem de erro (se houver)
+      description: Cole o texto do erro. Logs do IDE em %LOCALAPPDATA%\GeneXus.
+      render: text

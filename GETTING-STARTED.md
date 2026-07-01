@@ -40,6 +40,14 @@ entre versões, então **deve** carregar em upgrades mais novos. Se o IDE recusa
 **Várias KBs abertas ao mesmo tempo.**
 Use `gx_targets` para ver os slugs e passe `kb=<slug>` em cada tool. Com uma só KB, `kb` é opcional.
 
-## Reportar um problema
-Inclua: a **versão** (`gx_whoami`), **GeneXus 17/18** (e upgrade), o que você pediu, a **mensagem de
-erro** e, se possível, o passo para reproduzir. Logs do IDE em `%LOCALAPPDATA%\GeneXus`.
+## Reportar um bug ou sugestão
+O canal é a aba **Issues** deste repositório. Dois jeitos:
+
+- **Pelo Claude Code (mais fácil):** peça *"reporta esse bug"* ou *"manda essa sugestão"*. Ele coleta
+  a versão (`gx_whoami`) e o contexto e abre a issue pra você (via `gh`, ou te dá um link já
+  preenchido). Veja as instruções no `CLAUDE.md`.
+- **Manualmente:** abra em `Issues → New issue` e escolha **🐛 Bug** ou **💡 Sugestão** — o formulário
+  já pede o que precisamos.
+
+Em qualquer caso, inclua: **versão** (`gx_whoami`), **GeneXus 17/18** (e upgrade), o que você pediu, a
+**mensagem de erro** e o passo para reproduzir. Logs do IDE em `%LOCALAPPDATA%\GeneXus`.

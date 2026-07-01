@@ -27,3 +27,24 @@ Há uma skill **`gxobjgen`** com o fluxo completo e o catálogo — use-a.
 - Fluxo, pré-requisitos e gotchas: skill **`gxobjgen`** (`.claude/skills/gxobjgen/SKILL.md`).
 - Catálogo das ~71 tools: `docs/tools.md`.
 - Primeiros passos e problemas comuns: `GETTING-STARTED.md`.
+
+## Reportar bug ou sugestão (você pode abrir a issue pelo usuário)
+Quando o usuário pedir para **reportar um bug** ou **enviar uma sugestão** sobre o GxObjGen:
+1. **Colete o contexto** antes de escrever: rode `gx_whoami` (versão da extensão + KB + modo) e
+   pergunte a versão do GeneXus (17/18 e upgrade) se não for óbvia. Para bug, capture o passo e a
+   mensagem de erro exata.
+2. **Abra a issue** no repositório `franciscorizzo/GxObjGen-install` via o GitHub CLI (peça
+   confirmação do texto antes de enviar):
+   ```bash
+   gh issue create --repo franciscorizzo/GxObjGen-install \
+     --title "<resumo curto>" \
+     --label bug \            # use "enhancement" para sugestão
+     --body "<versão GxObjGen, GeneXus 17/18+upgrade, o que fez, esperado vs. ocorrido, erro>"
+   ```
+3. **Se o `gh` não estiver instalado/autenticado**, não trave: gere um **link de nova issue já
+   preenchido** para o usuário abrir no navegador (ele precisa estar logado no GitHub com acesso ao
+   repo), no formato:
+   `https://github.com/franciscorizzo/GxObjGen-install/issues/new?labels=bug&title=<url-encoded>&body=<url-encoded>`
+4. Depois de criar, **devolva o link da issue** ao usuário.
+
+Nunca invente versão/erro — use o que o `gx_whoami` e o usuário fornecerem.
