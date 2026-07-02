@@ -45,7 +45,7 @@ de chamar. Com várias KBs abertas, passe `kb=<slug>` (veja `gx_targets`).
 - `gx_get_object_text` — partes de TEXTO (source, rules, conditions, events). Leitura PARCIAL:
   `part`, `fromLine`/`toLine`, `find`+`context` (só a vizinhança de um termo, numerada).
 - `gx_read_structure` — conteúdo estrutural tipado (opções de menu, itens de SDT, params de query...).
-- `gx_analyze` — mode: impact (raio de impacto transitivo) / hierarchy / data_context / ui_context / lint / summary.
+- `gx_analyze` — **CALL TREE / raio de impacto** (árvore transitiva, indentada). mode: **impact** = *reverse call tree* (quem CHAMA/usa o objeto, transitivo — o que quebra se você mexer; sinônimos: reverse_call_tree, callers) / **hierarchy** = *call tree* (o que o objeto chama, transitivo; sinônimos: call_tree, calls) / data_context / ui_context / lint / summary.
 - `gx_dependencies` — usa / usado-por. `gx_doc` — documentação markdown de um objeto.
 - `gx_object_version` — versão de um objeto. `gx_history` — delta local desde uma versão.
 
