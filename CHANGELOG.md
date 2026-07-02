@@ -2,7 +2,18 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.9.0 — atual (beta)
+## 1.10.0 — atual (beta)
+Onda a partir do feedback da comunidade (obrigado, Ana!).
+- **`gx_diff`** — compara o texto de dois objetos (diff alinhado, `-`/`+`); ótimo p/ ver o que muda
+  entre implementações similares.
+- **`gx_lint`** — roda o specify em **lote** e lista só os **erros/avisos** reais (ex.: `spc0038`),
+  escopado por `type`/`like`, com teto. Útil antes de um build.
+- **Call tree mais fácil de achar** — `gx_analyze mode=impact` (quem chama, transitivo = raio de
+  impacto) e `mode=hierarchy` (o que chama) agora aceitam sinônimos `reverse_call_tree`/`call_tree`/
+  `callers`, e a doc deixa isso explícito.
+- **Fix instalador** — `install.ps1` reescrito em ASCII + BOM (não quebra mais no PowerShell 5.1).
+
+## 1.9.0
 Família de build/run por objeto (in-process, como o F5) — a partir de feedback da comunidade (issue #2).
 - **Build de 1 objeto sem BuildAll.** `gx_build action=object` compila só o objeto (in-process, ~como o
   F5; muito mais rápido que o BuildAll). Também `action=rebuild`, `buildWithThisOnly`, `rebuildAll`.

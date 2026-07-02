@@ -56,14 +56,16 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.9.0)
+## Novidades desta versão (1.10.0)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
-- **Build por objeto, sem BuildAll** (`gx_build action=object` — in-process, como o F5; muito mais
-  rápido). Também `rebuild`, `buildWithThisOnly`; e `gx_run mode=runWithoutBuilding | runWithThisOnly`.
-- **`gx_run capture=true`** compila o objeto automaticamente (sem BuildAll) quando necessário.
-- (1.8.0) Domínio enumerado, atributo tipado por Domain, Data Selector com parâmetro-variável, `gx_recover`.
-- (1.7.0) Erro de validação real, busca indexada (`gx_search_indexed`), leitura granular.
+- **`gx_diff`** — compara o texto de dois objetos (diff alinhado).
+- **`gx_lint`** — specify em lote, lista só os erros/avisos reais (escopado por `type`/`like`).
+- **Call tree** mais descobrível: `gx_analyze mode=impact` (quem chama, transitivo) / `mode=hierarchy`
+  (o que chama) — aceitam `reverse_call_tree`/`call_tree`/`callers`.
+- Fix do `install.ps1` (ASCII+BOM, não quebra no PowerShell 5.1).
+- (1.9.0) Build/run por objeto sem BuildAll. (1.8.0) Enum/Domain, Data Selector var-param, `gx_recover`.
+  (1.7.0) Erro de validação real, busca indexada, leitura granular.
 
 ## Reportar problemas
 Ao encontrar um bug, mande: **versão** (`gx_whoami` mostra `Extensao GxObjGen: vX.Y.Z`), **GeneXus
