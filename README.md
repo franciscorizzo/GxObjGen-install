@@ -56,16 +56,14 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.8.0)
+## Novidades desta versão (1.9.0)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
-- **Domínio enumerado** e **atributo tipado por Domain** (o atributo herda tipo/tamanho — e os valores,
-  se enumerado).
-- **Data Selector com parâmetro-variável** (tipado por domínio, atributo ou tipo básico).
-- **`gx_recover`:** lista objetos deletados recuperáveis (a recuperação em si é feita no IDE via
-  `Ctrl+Shift+R`).
-- (1.7.0) **Erro de validação real**, **busca indexada (`gx_search_indexed`)** e **leitura granular** —
-  continuam disponíveis.
+- **Build por objeto, sem BuildAll** (`gx_build action=object` — in-process, como o F5; muito mais
+  rápido). Também `rebuild`, `buildWithThisOnly`; e `gx_run mode=runWithoutBuilding | runWithThisOnly`.
+- **`gx_run capture=true`** compila o objeto automaticamente (sem BuildAll) quando necessário.
+- (1.8.0) Domínio enumerado, atributo tipado por Domain, Data Selector com parâmetro-variável, `gx_recover`.
+- (1.7.0) Erro de validação real, busca indexada (`gx_search_indexed`), leitura granular.
 
 ## Reportar problemas
 Ao encontrar um bug, mande: **versão** (`gx_whoami` mostra `Extensao GxObjGen: vX.Y.Z`), **GeneXus

@@ -2,7 +2,18 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.8.0 — atual (beta)
+## 1.9.0 — atual (beta)
+Família de build/run por objeto (in-process, como o F5) — a partir de feedback da comunidade (issue #2).
+- **Build de 1 objeto sem BuildAll.** `gx_build action=object` compila só o objeto (in-process, ~como o
+  F5; muito mais rápido que o BuildAll). Também `action=rebuild`, `buildWithThisOnly`, `rebuildAll`.
+  `action=all` (default) segue o build completo via MSBuild.
+- **Modos de run.** `gx_run mode=runWithoutBuilding` (roda sem compilar) e `mode=runWithThisOnly`.
+- **`gx_run capture=true`** agora **compila o objeto automaticamente** (sem BuildAll) quando o exe não
+  existe, e então executa/captura.
+- Observação: capturar o `msg()` de uma Procedure em apps **.NET 8** ainda não sai pelo `capture`
+  (o executável não escreve no stdout nesse target) — em investigação.
+
+## 1.8.0
 Cobertura de modelagem + recuperação de deletados.
 - **Domínio enumerado.** `gx_create_or_update_domain` aceita `enumValues` (lista de valores fixos:
   `{name, value, description}`) — cria um Domain enumerado.
