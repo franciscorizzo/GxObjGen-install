@@ -2,7 +2,19 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.7.0 — atual (beta)
+## 1.8.0 — atual (beta)
+Cobertura de modelagem + recuperação de deletados.
+- **Domínio enumerado.** `gx_create_or_update_domain` aceita `enumValues` (lista de valores fixos:
+  `{name, value, description}`) — cria um Domain enumerado.
+- **Atributo tipado por Domain.** `gx_create_or_update_transaction` aceita `domain` por atributo:
+  o atributo herda tipo/tamanho do Domain (inclusive os valores, se enumerado).
+- **Data Selector com parâmetro-variável.** `gx_create_or_update_dataselector` aceita
+  `parameters[].variable` (tipada por `domain`, `basedOnAttribute` ou `type`).
+- **`gx_recover` — recuperação de objetos deletados.** `action=list` lista os objetos deletados
+  recuperáveis (via histórico da KB). `action=recover` orienta a recuperação (que roda no IDE via
+  `Ctrl+Shift+R` — a operação exige o contexto interativo do IDE).
+
+## 1.7.0
 Onda de robustez e eficiência.
 - **Erro de validação real.** Quando uma criação/edição falha, a IA recebe o **motivo exato** do
   engine (ex.: função inexistente, atributo inválido) em vez de um "Validation failed" genérico.

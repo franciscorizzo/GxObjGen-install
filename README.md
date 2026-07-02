@@ -56,16 +56,16 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.7.0)
+## Novidades desta versão (1.8.0)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
-- **Erro de validação real:** quando uma criação/edição falha, a IA recebe o **motivo exato**
-  (ex.: função inexistente, atributo inválido) em vez de um "Validation failed" genérico.
-- **Busca indexada (`gx_search_indexed`):** procura no conteúdo da KB usando o **índice do próprio
-  IDE** — quase instantânea mesmo em KB grande (o "grep ao vivo" continua disponível para casar a
-  linha literal exata).
-- **Leitura granular:** dá para ler só um trecho de um objeto (por parte, faixa de linhas, ou a
-  vizinhança de um termo) — mais rápido e barato em objetos grandes.
+- **Domínio enumerado** e **atributo tipado por Domain** (o atributo herda tipo/tamanho — e os valores,
+  se enumerado).
+- **Data Selector com parâmetro-variável** (tipado por domínio, atributo ou tipo básico).
+- **`gx_recover`:** lista objetos deletados recuperáveis (a recuperação em si é feita no IDE via
+  `Ctrl+Shift+R`).
+- (1.7.0) **Erro de validação real**, **busca indexada (`gx_search_indexed`)** e **leitura granular** —
+  continuam disponíveis.
 
 ## Reportar problemas
 Ao encontrar um bug, mande: **versão** (`gx_whoami` mostra `Extensao GxObjGen: vX.Y.Z`), **GeneXus
