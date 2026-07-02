@@ -19,17 +19,35 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 
+# caminho do PROPRIO script (robusto p/ varios modos de invocacao: -File, .\, ISE, etc.)
+$self = $PSCommandPath
+if ([string]::IsNullOrEmpty($self)) { $self = $MyInvocation.MyCommand.Path }
+if ([string]::IsNullOrEmpty($self)) { $self = $MyInvocation.MyCommand.Definition }
+
 # 0) elevacao — a instalacao escreve em Program Files + roda /install (exige admin).
 #    Se rodar sem admin, o script se RE-LANCA elevado via UAC (basta confirmar o prompt).
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
-if (-not $isAdmin) {
-  Write-Host 'Sem privilegios de admin - reabrindo elevado (confirme o prompt do UAC)...' -ForegroundColor Yellow
-  $q = [char]34   # aspas dupla, p/ citar caminhos com espaco sem escape
-  $psArgs = "-NoExit -NoProfile -ExecutionPolicy Bypass -File $q$PSCommandPath$q"
-  if ($GxDir) { $psArgs += " -GxDir $q$GxDir$q" }
-  try { Start-Process powershell -Verb RunAs -ArgumentList $psArgs }
-  catch { Write-Host 'Elevacao negada/cancelada. Abra um PowerShell como Administrador e rode o install.ps1 de novo.' -ForegroundColor Red; exit 1 }
-  return   # o trabalho continua na janela elevada (que fica aberta, -NoExit)
+if ($isAdmin) {
+  Write-Host "Rodando como ADMINISTRADOR." -ForegroundColor Green
+} else {
+  Write-Host "Sem privilegios de admin - solicitando elevacao (confirme o prompt do UAC)..." -ForegroundColor Yellow
+  if ([string]::IsNullOrEmpty($self) -or -not (Test-Path $self)) {
+    Write-Host "Nao consegui localizar o caminho do script para auto-elevar." -ForegroundColor Red
+    Write-Host "Abra o PowerShell COMO ADMINISTRADOR (menu Iniciar > digite 'PowerShell' > botao direito > Executar como administrador) e rode:" -ForegroundColor Cyan
+    Write-Host "  powershell -ExecutionPolicy Bypass -File `"<caminho>\install.ps1`"" -ForegroundColor Cyan
+    exit 1
+  }
+  # ArgumentList como ARRAY (robusto p/ caminhos com espaco no Windows PowerShell 5.1)
+  $argList = @('-NoExit','-NoProfile','-ExecutionPolicy','Bypass','-File', $self)
+  if ($GxDir) { $argList += @('-GxDir', $GxDir) }
+  try {
+    Start-Process -FilePath 'powershell.exe' -Verb RunAs -ArgumentList $argList | Out-Null
+    Write-Host "Uma nova janela (Administrador) foi aberta para concluir a instalacao." -ForegroundColor Green
+  } catch {
+    Write-Host "Elevacao cancelada/negada. Abra o PowerShell COMO ADMINISTRADOR e rode install.ps1 de novo." -ForegroundColor Red
+    exit 1
+  }
+  exit 0   # o trabalho continua na janela elevada (-NoExit a mantem aberta)
 }
 
 # 1) DLL empacotada (ao lado deste script, em Packages\)
