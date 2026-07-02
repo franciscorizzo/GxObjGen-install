@@ -1,5 +1,5 @@
-<#
-  GxObjGen — instalador para BETA TESTERS (nao compila; so instala a DLL ja empacotada).
+﻿<#
+  GxObjGen - instalador para BETA TESTERS (nao compila; so instala a DLL ja empacotada).
 
   O que faz: copia Packages\GxObjGen.dll (deste pacote) para a subpasta 'Packages' de cada
   instalacao do GeneXus detectada (17 e/ou 18) e roda 'genexus.exe /install' para registrar.
@@ -24,7 +24,7 @@ $self = $PSCommandPath
 if ([string]::IsNullOrEmpty($self)) { $self = $MyInvocation.MyCommand.Path }
 if ([string]::IsNullOrEmpty($self)) { $self = $MyInvocation.MyCommand.Definition }
 
-# 0) elevacao — a instalacao escreve em Program Files + roda /install (exige admin).
+# 0) elevacao - a instalacao escreve em Program Files + roda /install (exige admin).
 #    Se rodar sem admin, o script se RE-LANCA elevado via UAC (basta confirmar o prompt).
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 if ($isAdmin) {
