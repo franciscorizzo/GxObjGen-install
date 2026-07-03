@@ -2,7 +2,23 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.10.0 — atual (beta)
+## 1.11.0 — atual (beta)
+Grid tab relacionada em WorkWithPlus via MCP (obrigado, @yurecamilo! — issue #7).
+- **`gx_wwp_add_tree`** — adiciona uma **subárvore completa** a uma instância WorkWithPlus de forma
+  **atômica**: monta todos os nós em memória e valida/salva **uma única vez** no fim. Estruturas que
+  só são válidas completas (ex.: grid tab de tabela relacionada) agora nascem via MCP — o
+  `gx_wwp_add` nó a nó era rejeitado pela validação a cada save.
+- **Scaffold do wizard via `source`** — `{type:"gridTab", source:"Conta"}` no `gx_wwp_add_tree` (ou
+  `gx_wwp_add childType=gridTab source=Conta`) equivale ao "Add › Grid Tab" do IDE: gera a aba a
+  partir da transação relacionada. `attFrom` desambigua qual FK usar. Complete com o `grid` e as
+  colunas na mesma chamada (a validação exige um main Grid e o `wcname`/ComponentName).
+- **Referências em props** — `transaction`/`attribute`/`gxobject` aceitam `guidTipo-Nome` (como
+  aparece no `gx_wwp_read`) ou o nome do objeto (também em `gx_wwp_set`/`gx_wwp_add`).
+- **Motivo REAL nas recusas de validação do pattern** — a mensagem traz os erros do WorkWithPlus
+  (ex.: "A value is required for the property 'ComponentName'") e o XML do que foi montado; em
+  recusa **nada persiste** (rollback automático).
+
+## 1.10.0
 Onda a partir do feedback da comunidade (obrigado, Ana!).
 - **`gx_diff`** — compara o texto de dois objetos (diff alinhado, `-`/`+`); ótimo p/ ver o que muda
   entre implementações similares.

@@ -59,6 +59,11 @@ de chamar. Com várias KBs abertas, passe `kb=<slug>` (veja `gx_targets`).
 ## WorkWithPlus
 - `gx_apply_workwithplus` — aplica o pattern WWP a uma Transaction (gera CRUD web). `gx_apply_pattern` — pattern genérico.
 - `gx_wwp_read` (árvore XML) · `gx_wwp_get` (nó navegável) · `gx_wwp_set` (setting) · `gx_wwp_add` / `gx_wwp_remove` (nós).
+- `gx_wwp_add_tree` — subárvore completa ATÔMICA (valida/salva 1 vez no fim): p/ estruturas que só
+  são válidas completas, ex. **grid tab de tabela relacionada**. Com `source` (objeto-fonte) faz o
+  scaffold do wizard: `{type:"gridTab", source:"Conta", props:{name,code,wcname}, children:[{type:
+  "table", children:[{type:"grid", children:[{type:"gridAttribute", props:{attribute:"..."}}]}]}]}`.
+  `source`/`attFrom` também no `gx_wwp_add`. Referências aceitam `guidTipo-Nome` (do `gx_wwp_read`) ou o nome.
 
 ## Layout (WebForm)
 - `gx_layout_tree` — lê a árvore de controles (XML). `gx_layout_set` — edita prop de um controle

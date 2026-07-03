@@ -56,16 +56,17 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.10.0)
+## Novidades desta versão (1.11.0)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
-- **`gx_diff`** — compara o texto de dois objetos (diff alinhado).
-- **`gx_lint`** — specify em lote, lista só os erros/avisos reais (escopado por `type`/`like`).
-- **Call tree** mais descobrível: `gx_analyze mode=impact` (quem chama, transitivo) / `mode=hierarchy`
-  (o que chama) — aceitam `reverse_call_tree`/`call_tree`/`callers`.
-- Fix do `install.ps1` (ASCII+BOM, não quebra no PowerShell 5.1).
-- (1.9.0) Build/run por objeto sem BuildAll. (1.8.0) Enum/Domain, Data Selector var-param, `gx_recover`.
-  (1.7.0) Erro de validação real, busca indexada, leitura granular.
+- **`gx_wwp_add_tree`** — subárvore completa numa instância WorkWithPlus de forma **atômica**
+  (valida/salva 1 vez no fim): grid tab de tabela relacionada agora nasce via MCP (issue #7).
+- **Scaffold do wizard via `source`** — `{type:"gridTab", source:"Conta"}` ≈ "Add › Grid Tab" do IDE
+  (também `gx_wwp_add childType=gridTab source=...`; `attFrom` desambigua a FK).
+- Referências (`transaction`/`attribute`/`gxobject`) aceitam `guidTipo-Nome` ou o nome do objeto.
+- Recusas de validação do pattern agora trazem o **motivo real** + o XML montado (nada persiste).
+- (1.10.0) `gx_diff`, `gx_lint`, call tree descobrível, fix do install.ps1. (1.9.0) Build/run por
+  objeto sem BuildAll. (1.8.0) Enum/Domain, Data Selector var-param, `gx_recover`.
 
 ## Reportar problemas
 Ao encontrar um bug, mande: **versão** (`gx_whoami` mostra `Extensao GxObjGen: vX.Y.Z`), **GeneXus
