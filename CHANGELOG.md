@@ -2,7 +2,17 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.11.0 — atual (beta)
+## 1.11.1 — atual (beta) — ⚠️ HOTFIX CRÍTICO (perda de dados)
+**Atualize já.** Versões anteriores: `gx_reorganize` com `execute=true` executava um **Create Tables**
+(recria as tabelas e **apaga todos os dados**) em vez de um **Reorganize** incremental (ALTER, que
+preserva os dados). Ao adicionar um atributo e reorganizar, os registros eram perdidos.
+- Corrigido: `gx_reorganize execute=true` agora faz **reorganização incremental** (ALTER/CREATE
+  conforme o diff, **preserva os dados**). Validado com teste de perda de dados (dado sobrevive ao
+  add-attribute + reorg).
+- `gx_build action=all` foi auditado e **já era** incremental (seguro).
+- Recomendação geral: rode **`gx_reorganize execute=false`** (análise) antes de qualquer reorg real.
+
+## 1.11.0 (beta)
 Grid tab relacionada em WorkWithPlus via MCP (obrigado, @yurecamilo! — issue #7).
 - **`gx_wwp_add_tree`** — adiciona uma **subárvore completa** a uma instância WorkWithPlus de forma
   **atômica**: monta todos os nós em memória e valida/salva **uma única vez** no fim. Estruturas que

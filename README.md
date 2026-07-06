@@ -56,10 +56,13 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.11.0)
+## Novidades desta versão (1.11.1)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
-- **`gx_wwp_add_tree`** — subárvore completa numa instância WorkWithPlus de forma **atômica**
+- ⚠️ **HOTFIX crítico (perda de dados)** — `gx_reorganize execute=true` recriava as tabelas e apagava
+  os dados; agora faz **reorganização incremental** (ALTER, preserva). **Atualize já.** (`gx_build all`
+  já era seguro.) Dica: rode `gx_reorganize execute=false` antes de reorganizar de verdade.
+- (1.11.0) **`gx_wwp_add_tree`** — subárvore completa numa instância WorkWithPlus de forma **atômica**
   (valida/salva 1 vez no fim): grid tab de tabela relacionada agora nasce via MCP (issue #7).
 - **Scaffold do wizard via `source`** — `{type:"gridTab", source:"Conta"}` ≈ "Add › Grid Tab" do IDE
   (também `gx_wwp_add childType=gridTab source=...`; `attFrom` desambigua a FK).
