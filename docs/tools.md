@@ -61,8 +61,12 @@ de chamar. Com várias KBs abertas, passe `kb=<slug>` (veja `gx_targets`).
 - `gx_wwp_read` (árvore XML) · `gx_wwp_get` (nó navegável) · `gx_wwp_set` (setting) · `gx_wwp_add` / `gx_wwp_remove` (nós).
 - `gx_wwp_add_tree` — subárvore completa ATÔMICA (valida/salva 1 vez no fim): p/ estruturas que só
   são válidas completas, ex. **grid tab de tabela relacionada**. Com `source` (objeto-fonte) faz o
-  scaffold do wizard: `{type:"gridTab", source:"Conta", props:{name,code,wcname}, children:[{type:
+  scaffold: `{type:"gridTab", source:"Conta", props:{name,code,wcname}, children:[{type:
   "table", children:[{type:"grid", children:[{type:"gridAttribute", props:{attribute:"..."}}]}]}]}`.
+  O `source` inicializa a aba e materializa o `<transaction>` (`transaction`+`level 'root:<Trn>'`);
+  o `grid` + colunas vêm SEMPRE do `children`. **Tabela neta** (transação não-filha-direta, FK
+  direta): funciona com `source`, ou na árvore manual com `{type:"transaction", props:{transaction:
+  "<Trn>", level:"root:<Trn>"}}` (v1.11.2+). Prop inexistente → erro com os atributos válidos.
   `source`/`attFrom` também no `gx_wwp_add`. Referências aceitam `guidTipo-Nome` (do `gx_wwp_read`) ou o nome.
 
 ## Layout (WebForm)

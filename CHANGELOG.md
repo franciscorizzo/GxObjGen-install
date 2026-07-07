@@ -2,7 +2,26 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.11.1 — atual (beta) — ⚠️ HOTFIX CRÍTICO (perda de dados)
+## 1.11.2 — atual (beta)
+WWP: grid tab de **tabela "neta"** (transação que NÃO é filha direta da root, mas tem FK direta —
+ex. chave `EmpresaCNPJ+Ano+Mes+Plano` numa `WorkWithPlusEmpresa`) agora funciona — obrigado de novo,
+@yurecamilo! (feedback na issue #7).
+- **`level`/`defaultLevel` (e qualquer prop de tipo custom/enum/bool) agora persistem** — as props
+  passaram a ser gravadas pelo mesmo caminho da desserialização do pattern (TypeConverter do
+  atributo). Antes, o valor era aceito em memória e **descartado em silêncio** na serialização —
+  era por isso que o `<transaction>` saía sem `level` e a validação recusava sem dizer o motivo.
+- **Scaffold via `source` materializa o `<transaction>` explícito** (`transaction` + `level`
+  `root:<Trn>` + defaults), o mesmo shape que o wizard "Add › Grid Tab" do IDE grava. P/ tabela
+  neta é obrigatório — os defaults do WWP só resolvem transação filha direta. (Na árvore manual,
+  passe `{type:"transaction", props:{transaction:"<Trn>", level:"root:<Trn>"}}`.)
+- **Prop inexistente agora é recusada na hora** com a lista `nome(tipo)` dos atributos válidos do
+  nó (antes um typo era engolido em silêncio e você só via uma recusa genérica no fim).
+- **Referências por nome simples com resolução tipada** — `transaction:"Conta"` resolve pela
+  Transaction (não pela Table homônima); vale p/ todos os `reference(...)` (attribute, gxobject...).
+- Correção na doc das tools: o `source` **não** gera grid/colunas (nunca gerou) — o `grid` + colunas
+  vêm no `children` do payload, como no exemplo.
+
+## 1.11.1 (beta) — ⚠️ HOTFIX CRÍTICO (perda de dados)
 **Atualize já.** Versões anteriores: `gx_reorganize` com `execute=true` executava um **Create Tables**
 (recria as tabelas e **apaga todos os dados**) em vez de um **Reorganize** incremental (ALTER, que
 preserva os dados). Ao adicionar um atributo e reorganizar, os registros eram perdidos.
