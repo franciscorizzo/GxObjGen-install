@@ -56,14 +56,18 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.11.2)
+## Novidades desta versão (1.11.3)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
-- **WWP: grid tab de tabela "neta"** (transação não-filha-direta com FK direta) agora funciona
-  (feedback da issue #7): props de tipo custom (**`level`** etc.) persistem de verdade; o `source`
-  materializa o `<transaction>` explícito (`level='root:<Trn>'`, shape do wizard do IDE); prop
-  inexistente é recusada na hora com a lista de atributos válidos; referências por **nome simples**
-  resolvem pelo tipo certo (Transaction, não a Table homônima).
+- **`variables[]` v2** (issues #9/#10): atualiza variável existente (com relatório antes→depois),
+  tipagem por `domain`/`basedOnAttribute`, Data Types do GX por nome (`HttpRequest`...), type
+  desconhecido recusado na hora; `gx_var_inspect` p/ qualquer objeto.
+- **`gx_build`/`gx_run`** (issue #11): pré-check de reorganização pendente (status distinto em vez
+  de pendurar no modal do IDE), `autoReorg=true` (reorganize incremental headless antes do build) e
+  guard de concorrência (nada de MSBuild zumbi empilhado).
+- (1.11.2) **WWP: grid tab de tabela "neta"** (issue #7): props de tipo custom (**`level`** etc.)
+  persistem; o `source` materializa o `<transaction>` explícito; prop inexistente recusada na hora;
+  referências por **nome simples** resolvem pelo tipo certo.
 - (1.11.1) ⚠️ **HOTFIX crítico (perda de dados)** — `gx_reorganize execute=true` recriava as tabelas e
   apagava os dados; agora faz **reorganização incremental** (ALTER, preserva). (`gx_build all`
   já era seguro.) Dica: rode `gx_reorganize execute=false` antes de reorganizar de verdade.

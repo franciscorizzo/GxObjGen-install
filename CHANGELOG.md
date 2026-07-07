@@ -2,7 +2,32 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.11.2 — atual (beta)
+## 1.11.3 — atual (beta)
+Onda 2 do feedback da comunidade (issues #9, #10 e #11 — obrigado de novo, @yurecamilo!).
+
+**`variables[]` v2 (procedure/API):**
+- **Atualiza variável existente** — re-rodar com `type`/`length`/`decimals`/`isCollection`
+  diferentes agora APLICA a mudança e reporta `N nova(s), M atualizada(s) [&Var: antes -> depois]`.
+  (Era o bug do "type GUID aceito e virou Character(40)": a var placeholder já existia e o re-run
+  pulava em silêncio.) Só os campos declarados são tocados — payload só com `name` não clobba nada.
+- **`domain` e `basedOnAttribute`** — tipar variável por Domain (inclusive enumerado) ou "based on"
+  um atributo (herda tipo/tamanho), como já existia no Data Selector.
+- **Data Types do GX por nome** — `type:"HttpRequest"` (e demais tipos do combo do IDE) agora
+  funciona de verdade (mesmo parser do IDE). `&HttpRequest.GetHeader(...)` compila.
+- **Type desconhecido = erro na hora** com a lista dos tipos aceitos (nada de virar Character
+  em silêncio).
+- `gx_var_inspect` aceita qualquer objeto com variáveis (WebPanel, WebComponent...), não só Procedure.
+
+**`gx_build` / `gx_run`:**
+- **Pré-check de reorganização pendente** — se um build/run fosse abrir o modal de reorg no IDE
+  (a chamada pendurava até um timeout ambíguo), agora ele NEM INICIA e devolve o status distinto
+  "REORGANIZACAO PENDENTE" com as opções.
+- **`autoReorg=true`** — roda o reorganize **incremental** headless antes do build (coerente com o
+  `gx_reorganize execute=true`; altera o schema, por isso é opt-in).
+- **Guard de concorrência** — um build/run por vez; chamada concorrente recebe "BUILD EM ANDAMENTO"
+  em vez de empilhar MSBuild zumbi.
+
+## 1.11.2 (beta)
 WWP: grid tab de **tabela "neta"** (transação que NÃO é filha direta da root, mas tem FK direta —
 ex. chave `EmpresaCNPJ+Ano+Mes+Plano` numa `WorkWithPlusEmpresa`) agora funciona — obrigado de novo,
 @yurecamilo! (feedback na issue #7).

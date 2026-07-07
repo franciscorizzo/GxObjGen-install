@@ -21,7 +21,7 @@ de chamar. Com várias KBs abertas, passe `kb=<slug>` (veja `gx_targets`).
 
 ## Criar / atualizar (idempotente)
 - `gx_create_or_update_transaction` — atributos; 1º com isKey=true é a chave; FK = mesmo nome de atributo.
-- `gx_create_or_update_procedure` — source + rules + `variables` (use `basedOnObject` p/ SDT/External Object; `isCollection`).
+- `gx_create_or_update_procedure` — source + rules + `variables` (cria E ATUALIZA: só os campos declarados; tipagem por `type` eDBType OU Data Type do GX por nome ex. `HttpRequest`, `domain`, `basedOnAttribute`, `basedOnObject` p/ SDT/EO; `isCollection`; type desconhecido = erro com a lista).
 - `gx_create_or_update_dataprovider` — source (igual procedure).
 - `gx_create_or_update_sdt` — itens (type por item).
 - `gx_create_or_update_api` — Service Source REST + variables.
@@ -35,8 +35,8 @@ de chamar. Com várias KBs abertas, passe `kb=<slug>` (veja `gx_targets`).
 ## Validar / reorganizar / compilar / rodar
 - `gx_specify` — valida/gera specs de um objeto; devolve erros/avisos do engine. **Use sempre após criar/editar.**
 - `gx_reorganize` — `execute=false` analisa (in-process, rápido); `execute=true` cria/altera tabelas (MSBuild, lento). Datastore obrigatório.
-- `gx_build` — compila a app (MSBuild, lento). `gx_test` — GXtest (MSBuild, lento).
-- `gx_run` — executa objeto (Web Panel→browser; Procedure→`capture=true` p/ stdout; precisa IsMain=True). Lento.
+- `gx_build` — compila a app (MSBuild `all`, lento; por objeto = in-process rápido). PRÉ-CHECK: reorg pendente → status distinto sem iniciar; `autoReorg=true` roda o reorganize incremental antes. 1 build por vez (guard). `gx_test` — GXtest (MSBuild, lento).
+- `gx_run` — executa objeto (Web Panel→browser; Procedure→`capture=true` p/ stdout; precisa IsMain=True). Lento. Mesmo pré-check de reorg/`autoReorg`/guard do gx_build.
 - `gx_datastore` — status do datastore + web server/porta (lê model.ini). `gx_kb_check` — consistência da KB (lento).
 - `gx_schema` — what=kb|db|compare (XML de schema; compare exige dep que pode faltar). Lento.
 
