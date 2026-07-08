@@ -26,6 +26,19 @@ estar elevado); prefira rodar o instalador você mesmo num PowerShell.
 Rode `/mcp` no Claude Code e reconecte o servidor `genexus`. O cliente não re-busca a lista de tools
 sozinho depois que o servidor reinicia (ex.: após atualizar a extensão).
 
+**"tools fetch failed" (a porta 8780 responde, mas os `gx_*` não carregam).**
+Importante: se `127.0.0.1:8780` responde (mesmo com um erro a um GET no navegador), a extensão **está**
+instalada e o GeneXus **está** aberto — o gateway só existe dentro do IDE, não sobe sozinho. Não perca
+tempo reinstalando. Rode o diagnóstico decisivo (POST de verdade, não GET):
+```powershell
+curl -s -X POST http://127.0.0.1:8780/mcp -H "Content-Type: application/json" -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"gx_targets\",\"arguments\":{}}}"
+```
+- **Lista as KBs** (slug/porta) → o gateway está OK; o "fetch failed" era só o **cache de conexão do
+  Claude Code**. Reinicie a sessão do Claude Code (o registro fica no `.claude.json` do projeto e ele
+  reconecta sozinho) ou rode `/mcp` → reconnect no servidor `genexus`.
+- **Responde mas 0 KBs** → **abra a sua KB no GeneXus** (o gateway sobe sem KB, mas sem KB não há tools).
+- **Connection refused** → aí sim o IDE/extensão não está no ar: abra o GeneXus (e confirme a instalação).
+
 **"Connection refused" / o MCP não conecta.**
 Confirme que o **GeneXus está aberto com uma KB carregada** — o servidor só sobe com o IDE aberto.
 A porta do gateway é `127.0.0.1:8780`. Se você registrou outra porta, ajuste com
