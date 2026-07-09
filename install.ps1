@@ -93,4 +93,20 @@ foreach ($t in $targets) {
 
 if ($ok -eq 0) { throw "Nada instalado (veja os avisos acima)." }
 Write-Host "`nConcluido em $ok instalacao(oes). Abra o GeneXus e sua KB; a extensao sobe o servidor MCP automaticamente." -ForegroundColor Green
-Write-Host "Depois registre no Claude Code (uma vez):  claude mcp add --transport http genexus http://127.0.0.1:8780/mcp" -ForegroundColor Green
+
+# [issue #15] O gateway multi-KB (porta 8780) REQUER Python no PATH. Sem Python ele nao sobe
+# (silenciosamente ate a v1.11.4) e a conexao certa e a porta POR-KB mostrada no Output do IDE.
+$py = $null
+foreach ($exe in @('pythonw.exe','python.exe','py.exe')) {
+  $cmd = Get-Command $exe -ErrorAction SilentlyContinue
+  if ($cmd) { $py = $cmd.Source; break }
+}
+if ($py) {
+  Write-Host "`nPython encontrado ($py) - o gateway multi-KB sobe na porta 8780." -ForegroundColor Green
+  Write-Host "Registre no Claude Code (uma vez):  claude mcp add --transport http genexus http://127.0.0.1:8780/mcp" -ForegroundColor Green
+} else {
+  Write-Host "`nAVISO: Python NAO encontrado no PATH - o gateway multi-KB (porta 8780) NAO vai subir." -ForegroundColor Yellow
+  Write-Host "A extensao funciona normalmente pela porta POR-KB: abra a KB e use a URL mostrada no" -ForegroundColor Yellow
+  Write-Host "Output do IDE (secao 'GxObjGen MCP'), ex.:  claude mcp add --transport http genexus-<kb> http://127.0.0.1:<porta>/mcp" -ForegroundColor Yellow
+  Write-Host "Para habilitar o gateway 8780: instale Python (winget install Python.Python.3.12) e reabra o GeneXus." -ForegroundColor Yellow
+}

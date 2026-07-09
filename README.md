@@ -26,10 +26,18 @@ altera objetos da sua KB **ao vivo** — sem exportar nada, tudo em `127.0.0.1`.
    numa janela de administrador (que fica aberta pra você ver o resultado). O script detecta o
    GeneXus 17 e/ou 18, copia a DLL e registra a extensão.
    (Para uma versão específica: `... -File install.ps1 -GxDir "C:\Program Files (x86)\GeneXus\GeneXus18"`.)
-3. **Registre o MCP no Claude Code** (uma vez):
-   ```
-   claude mcp add --transport http genexus http://127.0.0.1:8780/mcp
-   ```
+3. **Registre o MCP no Claude Code** (uma vez). Há **duas formas de conectar**:
+   - **Gateway multi-KB (porta 8780)** — 1 registro para todas as KBs. **Requer Python no PATH**
+     (é ele quem roda o gateway; sem Python o gateway NÃO sobe e a 8780 recusa conexão):
+     ```
+     claude mcp add --transport http genexus http://127.0.0.1:8780/mcp
+     ```
+   - **Porta por-KB (sem Python)** — cada KB tem uma porta própria **determinística** (estável
+     entre reaberturas, faixa 8787–8986). Ao abrir a KB, o Output do IDE (seção "GxObjGen MCP")
+     mostra a URL e o comando prontos, ex.:
+     ```
+     claude mcp add --transport http genexus-<kb> http://127.0.0.1:<porta>/mcp
+     ```
    > O **Claude Code do dia a dia NÃO precisa de admin** — a elevação é só para o passo de instalação.
    > Depois, o MCP roda em loopback (`127.0.0.1`) e o Claude Code comum conversa com ele normalmente.
 
@@ -37,7 +45,8 @@ altera objetos da sua KB **ao vivo** — sem exportar nada, tudo em `127.0.0.1`.
 1. Abra o **GeneXus** e a **sua KB**. A extensão sobe o servidor MCP automaticamente.
 2. No **Claude Code**, comece perguntando algo como *"liste as KBs conectadas"* — a IA usa a tool
    `gx_targets`. Com várias KBs abertas, cada tool aceita o parâmetro `kb` (o slug da KB); com uma
-   só, é opcional. O endpoint `:8780` é um **gateway**: 1 porta para todas as KBs abertas.
+   só, é opcional. O endpoint `:8780` é um **gateway**: 1 porta para todas as KBs abertas
+   (requer Python; sem ele, use a porta por-KB do Output do IDE — a extensão funciona igual).
 
 ## Referência para o Claude Code (recomendado)
 Este repositório também inclui material que ensina o Claude Code a **usar bem** o MCP — rode o Claude
@@ -56,10 +65,13 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.11.4)
+## Novidades desta versão (1.11.5)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
-- **`variables[]` no Web Panel + `gx_set_variables`** (issue #13): tipar as variáveis dos eventos
+- **Gateway 8780: fim da falha silenciosa** (issue #15): o gateway multi-KB requer **Python no
+  PATH** (agora documentado); quando não sobe, o Output do IDE diz o **motivo** e o workaround
+  (porta por-KB determinística, que funciona sem Python); `install.ps1` checa Python e orienta.
+- (1.11.4) **`variables[]` no Web Panel + `gx_set_variables`** (issue #13): tipar as variáveis dos eventos
   direto no `gx_create_or_update_webpanel` (specify fecha limpo, sem spc0047/spc0023), e a nova
   tool `gx_set_variables` tipa/atualiza variáveis de **qualquer** objeto com VariablesPart
   (WebPanel, WebComponent, Transaction, API...) — paridade de escrita com o `gx_var_inspect`.

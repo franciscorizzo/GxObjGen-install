@@ -39,10 +39,20 @@ curl -s -X POST http://127.0.0.1:8780/mcp -H "Content-Type: application/json" -d
 - **Responde mas 0 KBs** → **abra a sua KB no GeneXus** (o gateway sobe sem KB, mas sem KB não há tools).
 - **Connection refused** → aí sim o IDE/extensão não está no ar: abra o GeneXus (e confirme a instalação).
 
-**"Connection refused" / o MCP não conecta.**
+**"Connection refused" na 8780 (mas o IDE mostrou o MCP numa OUTRA porta, ex. 8879).**
+Não é o MCP quebrado — é o **gateway multi-KB (8780) que não subiu**, quase sempre porque **não há
+Python no PATH** (o gateway é um script Python que a extensão lança; pré-requisito só dele). O
+servidor **por-KB** está vivo na porta que o Output do IDE mostrou (seção "GxObjGen MCP") — ela é
+**determinística por KB** (estável entre reaberturas, faixa 8787–8986). Duas saídas:
+- Use a porta por-KB (funciona sem Python): `claude mcp add --transport http genexus-<kb> http://127.0.0.1:<porta>/mcp`
+- Ou instale Python (`winget install Python.Python.3.12`), reabra o GeneXus e use a 8780.
+Desde a v1.11.5, a seção "GxObjGen MCP" do Output diz o status do gateway e o motivo quando ele
+não sobe. NÃO reinstale a extensão por causa disso.
+
+**"Connection refused" / o MCP não conecta (nem na porta por-KB).**
 Confirme que o **GeneXus está aberto com uma KB carregada** — o servidor só sobe com o IDE aberto.
-A porta do gateway é `127.0.0.1:8780`. Se você registrou outra porta, ajuste com
-`claude mcp add --transport http genexus http://127.0.0.1:8780/mcp`.
+Gateway: `127.0.0.1:8780` (requer Python). Por-KB: a URL do Output do IDE. Se você registrou outra
+porta, ajuste com `claude mcp add`.
 
 **A IA diz que a operação foi BLOQUEADA (read-only).**
 É o padrão seguro. Para permitir escrita, **feche o GeneXus e reabra com a variável de ambiente

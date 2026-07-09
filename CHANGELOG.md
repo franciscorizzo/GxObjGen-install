@@ -2,7 +2,22 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.11.4 — atual (beta)
+## 1.11.5 — atual (beta)
+Correção da issue #15 (obrigado, @bpessoni!) — gateway 8780 falhava em SILÊNCIO sem Python.
+
+- **Causa raiz documentada**: o gateway multi-KB (porta 8780) é um script Python que a extensão
+  lança — **Python no PATH é pré-requisito dele** (e não estava documentado). Sem Python, o
+  gateway não subia e nada aparecia no IDE; a doc cravava 8780 → "connection refused" parecia
+  MCP quebrado. O servidor por-KB (porta determinística, faixa 8787–8986) sempre funcionou.
+- **Status do gateway SEMPRE no Output do IDE** (seção "GxObjGen MCP"): `ATIVO` / `iniciado` /
+  `NAO INICIADO: <motivo>` (ex.: Python ausente) — com o workaround por-KB na própria mensagem.
+- **Mensagem por-KB ganhou a linha do gateway** (estado real + onde ver o motivo).
+- **`install.ps1` checa Python** ao final: verde (gateway ok) ou amarelo (como conectar sem ele
+  + como habilitar: `winget install Python.Python.3.12`).
+- **Doc alinhada**: README "duas formas de conectar"; GETTING-STARTED com o troubleshooting
+  exato do sintoma ("connection refused na 8780 mas o IDE mostrou outra porta" → não reinstale).
+
+## 1.11.4 (beta)
 Onda 3 do feedback da comunidade (issues #13 e #14 — obrigado de novo, @yurecamilo! — e a
 sugestão do texto do `gx_gxserver` na #12).
 

@@ -1,7 +1,9 @@
 # Operar uma KB GeneXus via o MCP GxObjGen
 
-Você tem acesso a um servidor MCP chamado **genexus** (gateway `http://127.0.0.1:8780/mcp`) que
-opera a **Knowledge Base GeneXus aberta no IDE**. As tools aparecem como `mcp__genexus__gx_*`.
+Você tem acesso a um servidor MCP chamado **genexus** (gateway `http://127.0.0.1:8780/mcp`; requer
+Python no PATH — se a 8780 não responder, use o registro por-KB `genexus-<kb>` na porta determinística
+que o Output do IDE mostra) que opera a **Knowledge Base GeneXus aberta no IDE**. As tools aparecem
+como `mcp__genexus__gx_*`.
 Há uma skill **`gxobjgen`** com o fluxo completo e o catálogo — use-a.
 
 ## Regras de ouro
