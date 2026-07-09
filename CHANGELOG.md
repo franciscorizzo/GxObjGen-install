@@ -2,7 +2,38 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.11.3 — atual (beta)
+## 1.11.4 — atual (beta)
+Onda 3 do feedback da comunidade (issues #13 e #14 — obrigado de novo, @yurecamilo! — e a
+sugestão do texto do `gx_gxserver` na #12).
+
+**Variáveis tipadas em Web Panel / qualquer objeto (issue #13):**
+- **`variables[]` no `gx_create_or_update_webpanel`** — mesmo payload do procedure/API
+  (`type` | `domain` | `basedOnAttribute` | `basedOnObject`, `isCollection`, Data Types do GX
+  por nome; cria novas e atualiza existentes só nos campos declarados). Tipando as vars dos
+  eventos, o `gx_specify` fecha limpo — sem `spc0047 not defined` / `spc0023 wrong type`.
+- **`gx_set_variables` (nova tool)** — tipa/atualiza variáveis de **qualquer** objeto com
+  VariablesPart (WebPanel, WebComponent, Transaction, API, Procedure...). Paridade de escrita
+  com o `gx_var_inspect`. `type` é opcional (desambigua homônimos).
+- Nota: nomes de variáveis *standard* do GX (`Msg`, `Today`, `Pgmname`...) são reservados —
+  a criação é recusada na hora com o motivo.
+
+**`gx_run` — E2E de Procedure com efeitos reais (issue #14):**
+- **`capture=true` é o run HEADLESS real** (agora documentado): compila se preciso (BuildOne)
+  e roda o **exe gerado** como processo filho — `&HttpClient` faz a requisição de verdade,
+  `New`/update gravam no banco de verdade, e o stdout/stderr vem na resposta com exit code.
+  Validado com listener local (POST recebido com o body exato) + row lido por um segundo exe.
+- **`args` no capture** — os parâmetros do `parm()` do proc main viram linha de comando do exe.
+- **`msg()` só captura na forma `msg(&x, status)`** — sem `status`, vira diálogo modal no exe
+  e pendura até o timeout (agora avisado na descrição da tool).
+- Os modos SEM capture (in-process, F5 do IDE) agora avisam no retorno: eles **não comprovam**
+  a execução/efeitos do programa — resposta vazia não significa "não executou".
+
+**`gx_gxserver` (parcial da issue #12):**
+- O stub não afirma mais "esta KB é LOCAL" — reporta que a conexão Team Dev não é
+  inspecionável por este build, que a KB **pode** estar sob GeneXus Server, e descreve o
+  sintoma do lock (diálogo atrás do IDE pendurando o Save) + workaround (check-out manual).
+
+## 1.11.3 (beta)
 Onda 2 do feedback da comunidade (issues #9, #10 e #11 — obrigado de novo, @yurecamilo!).
 
 **`variables[]` v2 (procedure/API):**

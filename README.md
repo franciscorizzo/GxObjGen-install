@@ -56,15 +56,22 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.11.3)
+## Novidades desta versão (1.11.4)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
-- **`variables[]` v2** (issues #9/#10): atualiza variável existente (com relatório antes→depois),
-  tipagem por `domain`/`basedOnAttribute`, Data Types do GX por nome (`HttpRequest`...), type
-  desconhecido recusado na hora; `gx_var_inspect` p/ qualquer objeto.
-- **`gx_build`/`gx_run`** (issue #11): pré-check de reorganização pendente (status distinto em vez
-  de pendurar no modal do IDE), `autoReorg=true` (reorganize incremental headless antes do build) e
-  guard de concorrência (nada de MSBuild zumbi empilhado).
+- **`variables[]` no Web Panel + `gx_set_variables`** (issue #13): tipar as variáveis dos eventos
+  direto no `gx_create_or_update_webpanel` (specify fecha limpo, sem spc0047/spc0023), e a nova
+  tool `gx_set_variables` tipa/atualiza variáveis de **qualquer** objeto com VariablesPart
+  (WebPanel, WebComponent, Transaction, API...) — paridade de escrita com o `gx_var_inspect`.
+- **`gx_run capture=true` = run headless real** (issue #14): roda o exe gerado com efeitos REAIS
+  (HTTP/DB acontecem) e stdout na resposta; `args` vira linha de comando; `msg()` só captura na
+  forma `msg(&x, status)`; modos in-process avisam que não comprovam efeitos.
+- **`gx_gxserver`** (parcial da #12): não afirma mais "KB LOCAL"; orienta o cenário de lock do
+  Team Dev (diálogo atrás do IDE) e o workaround de check-out.
+- (1.11.3) **`variables[]` v2** (issues #9/#10): atualiza variável existente (relatório
+  antes→depois), `domain`/`basedOnAttribute`, Data Types do GX por nome, type desconhecido
+  recusado; **`gx_build`/`gx_run`** (issue #11): pré-check de reorg pendente, `autoReorg=true`,
+  guard de concorrência.
 - (1.11.2) **WWP: grid tab de tabela "neta"** (issue #7): props de tipo custom (**`level`** etc.)
   persistem; o `source` materializa o `<transaction>` explícito; prop inexistente recusada na hora;
   referências por **nome simples** resolvem pelo tipo certo.
