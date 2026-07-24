@@ -50,16 +50,24 @@ if ($isAdmin) {
   exit 0   # o trabalho continua na janela elevada (-NoExit a mantem aberta)
 }
 
-# 1) DLL empacotada (ao lado deste script, em Packages\)
-$dll = Join-Path $PSScriptRoot "Packages\GxObjGen.dll"
-if (-not (Test-Path $dll)) { throw "GxObjGen.dll nao encontrada em $((Split-Path $dll)). Extraia o ZIP inteiro antes de rodar." }
-$ver = ([System.Diagnostics.FileVersionInfo]::GetVersionInfo($dll)).ProductVersion
+# 1) DLLs empacotadas (ao lado deste script). Ha DOIS variantes com a MESMA
+#    versao/funcionalidade, diferindo so no PackageCompatibility exigido pelo host:
+#      - Packages\GxObjGen.dll        -> GeneXus 17 e 18 (compat 143920)
+#      - Packages\gx15\GxObjGen.dll   -> GeneXus 15      (compat 123130; 5 tools de
+#                                        objetos inexistentes no GX15 ficam ocultas)
+#    A escolha por instalacao e feita pela versao MAJOR do genexus.exe.
+$dllDefault = Join-Path $PSScriptRoot "Packages\GxObjGen.dll"
+$dll15      = Join-Path $PSScriptRoot "Packages\gx15\GxObjGen.dll"
+if (-not (Test-Path $dllDefault)) { throw "GxObjGen.dll (17/18) nao encontrada em $((Split-Path $dllDefault)). Extraia o ZIP inteiro antes de rodar." }
+$ver = ([System.Diagnostics.FileVersionInfo]::GetVersionInfo($dllDefault)).ProductVersion
 Write-Host "GxObjGen v$ver" -ForegroundColor Cyan
+if (-not (Test-Path $dll15)) { Write-Host "AVISO: variante GX15 (Packages\gx15\GxObjGen.dll) ausente — GeneXus 15 sera pulado." -ForegroundColor Yellow }
 
 # 2) alvos: -GxDir explicito, ou auto-detecta 17/18 nos caminhos padrao
 if ($GxDir) { $targets = @($GxDir) }
 else {
   $targets = @(
+    "C:\Program Files (x86)\GeneXus\GeneXus15",
     "C:\Program Files (x86)\GeneXus\GeneXus17",
     "C:\Program Files (x86)\GeneXus\GeneXus18"
   ) | Where-Object { Test-Path (Join-Path $_ "genexus.exe") }
@@ -78,6 +86,17 @@ foreach ($t in $targets) {
 
   $open = Get-Process -Name genexus -ErrorAction SilentlyContinue | Where-Object { $_.Path -and ($_.Path -ieq $exe) }
   if ($open) { Write-Host "PULANDO: este GeneXus esta ABERTO (PID $($open.Id -join ', ')). Feche-o e rode de novo." -ForegroundColor Yellow; continue }
+
+  # Escolhe o DLL certo pela versao MAJOR do host (GX15 exige compat 123130).
+  $major = (Get-Item $exe).VersionInfo.ProductMajorPart
+  if ($major -eq 15) {
+    if (-not (Test-Path $dll15)) { Write-Host "PULANDO: GeneXus 15 detectado mas Packages\gx15\GxObjGen.dll ausente." -ForegroundColor Yellow; continue }
+    $dll = $dll15
+    Write-Host "Versao detectada: GeneXus 15 -> usando variante GX15 (compat 123130)." -ForegroundColor Cyan
+  } else {
+    $dll = $dllDefault
+    Write-Host "Versao detectada: GeneXus $major -> usando DLL padrao (compat 143920)." -ForegroundColor Cyan
+  }
 
   Copy-Item $dll -Destination $dest -Force
   $pdb = [System.IO.Path]::ChangeExtension($dll, ".pdb")

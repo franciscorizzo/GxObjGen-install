@@ -1,13 +1,14 @@
 # GxObjGen — extensão do GeneXus para IA (beta)
 
-GxObjGen é uma extensão que roda **dentro do GeneXus** (17 ou 18) e expõe a KB **aberta no IDE**
+GxObjGen é uma extensão que roda **dentro do GeneXus** (15, 17 ou 18) e expõe a KB **aberta no IDE**
 para o **Claude Code** via um servidor **MCP** local. Com ela, a IA lê, documenta e (opcionalmente)
 altera objetos da sua KB **ao vivo** — sem exportar nada, tudo em `127.0.0.1`.
 
 > **Beta:** obrigado por testar! Veja "Reportar problemas" no fim.
 
 ## Requisitos
-- **GeneXus 17 e/ou 18** instalado.
+- **GeneXus 15, 17 e/ou 18** instalado. (No GeneXus 15, 4 tools de objetos inexistentes nessa
+  versão ficam ocultas — veja as Novidades 1.12.0.)
 - **Windows PowerShell** (o instalador roda como Administrador).
 - **Claude Code** (CLI) para conversar com a KB.
 
@@ -24,8 +25,8 @@ altera objetos da sua KB **ao vivo** — sem exportar nada, tudo em `127.0.0.1`.
    A instalação precisa de **admin** (escreve em Program Files). Se você rodar de um PowerShell
    comum, o script **se re-lança elevado via UAC** — é só confirmar o prompt; o trabalho continua
    numa janela de administrador (que fica aberta pra você ver o resultado). O script detecta o
-   GeneXus 17 e/ou 18, copia a DLL e registra a extensão.
-   (Para uma versão específica: `... -File install.ps1 -GxDir "C:\Program Files (x86)\GeneXus\GeneXus18"`.)
+   GeneXus 15/17/18, copia a DLL da variante certa (por versão) e registra a extensão.
+   (Para uma versão específica: `... -File install.ps1 -GxDir "C:\Program Files (x86)\GeneXus\GeneXus15"`.)
 3. **Registre o MCP no Claude Code** (uma vez). Há **duas formas de conectar**:
    - **Gateway multi-KB (porta 8780)** — 1 registro para todas as KBs. **Requer Python no PATH**
      (é ele quem roda o gateway; sem Python o gateway NÃO sobe e a 8780 recusa conexão):
@@ -65,10 +66,16 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.11.5)
+## Novidades desta versão (1.12.0)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
-- **Gateway 8780: fim da falha silenciosa** (issue #15): o gateway multi-KB requer **Python no
+- **Suporte ao GeneXus 15** 🎉 (antes só 17/18) — verificado em runtime: as 73 tools disponíveis
+  no GX15 operam de ponta a ponta. O GX15 usa um **DLL próprio** (`PackageCompatibility` 123130 vs
+  143920 do 17/18); o `install.ps1` detecta a versão e instala a variante certa automaticamente.
+  Quatro tools de objetos que **não existem** no GX15 (`gx_create_or_update_designsystem`/`_api`/
+  `_urlrewrite`/`_usercontrol`) ficam ocultas no catálogo; o resto — CRUD, specify, reorg, build,
+  export/import, busca — funciona igual. As tools `gx_wwp_*` exigem **WorkWithPlus instalado** na KB.
+- (1.11.5) **Gateway 8780: fim da falha silenciosa** (issue #15): o gateway multi-KB requer **Python no
   PATH** (agora documentado); quando não sobe, o Output do IDE diz o **motivo** e o workaround
   (porta por-KB determinística, que funciona sem Python); `install.ps1` checa Python e orienta.
 - (1.11.4) **`variables[]` no Web Panel + `gx_set_variables`** (issue #13): tipar as variáveis dos eventos
@@ -98,4 +105,4 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
 
 ## Reportar problemas
 Ao encontrar um bug, mande: **versão** (`gx_whoami` mostra `Extensao GxObjGen: vX.Y.Z`), **GeneXus
-17/18**, o que você pediu, e a mensagem de erro. Logs do IDE em `%LOCALAPPDATA%\GeneXus`.
+15/17/18**, o que você pediu, e a mensagem de erro. Logs do IDE em `%LOCALAPPDATA%\GeneXus`.

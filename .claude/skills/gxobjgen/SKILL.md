@@ -1,6 +1,6 @@
 ---
 name: gxobjgen
-description: Criar, editar, validar, reorganizar, compilar e executar objetos de uma Knowledge Base GeneXus (17 ou 18) ABERTA no IDE, via o MCP GxObjGen (tools mcp__genexus__gx_*). Use quando o usuario quiser inspecionar, documentar, construir ou alterar uma aplicacao GeneXus (Transactions, Procedures, SDTs, Data Providers, Web Panels, APIs REST, Menus, Domains, WorkWithPlus), ou rodar reorg/build/run.
+description: Criar, editar, validar, reorganizar, compilar e executar objetos de uma Knowledge Base GeneXus (15, 17 ou 18) ABERTA no IDE, via o MCP GxObjGen (tools mcp__genexus__gx_*). Use quando o usuario quiser inspecionar, documentar, construir ou alterar uma aplicacao GeneXus (Transactions, Procedures, SDTs, Data Providers, Web Panels, APIs REST, Menus, Domains, WorkWithPlus), ou rodar reorg/build/run.
 ---
 
 # gxobjgen — Operar uma KB GeneXus via MCP
@@ -23,6 +23,11 @@ Base **aberta no IDE**. As tools aparecem no Claude Code como **`mcp__genexus__g
    `ToolSearch query="select:mcp__genexus__gx_whoami,mcp__genexus__gx_conventions"` (liste as que vai usar).
 4. **Se o servidor foi reiniciado/atualizado** e as tools novas nao aparecem ou dao schema antigo:
    rode **`/mcp`** e reconecte `genexus` (o cliente nao re-busca o tools/list sozinho).
+5. **GeneXus 15 (suportado desde 1.12.0):** o GX15 usa um DLL proprio (o `install.ps1` cuida disso).
+   4 tools de objetos que NAO existem no GX15 — `gx_create_or_update_designsystem`/`_api`/
+   `_urlrewrite`/`_usercontrol` — nao aparecem no catalogo do GX15 (nao tente chama-las la).
+   `gx_create_or_update_theme` funciona. As `gx_wwp_*` exigem **WorkWithPlus instalado** na KB
+   (em QUALQUER versao); sem WWP elas retornam "PatternInstancePart nao encontrada".
 
 ## Por onde comecar numa sessao nova
 1. `gx_whoami` — confirma a KB ativa, o modo (read-only?) e o contexto.
@@ -36,9 +41,9 @@ Base **aberta no IDE**. As tools aparecem no Claude Code como **`mcp__genexus__g
 
 ## Fluxo de criacao (o caminho feliz)
 1. **Criar/atualizar** com `gx_create_or_update_*` (idempotente — re-chamar atualiza):
-   transaction, procedure, sdt, dataprovider, api, webpanel, menu, domain, dataselector,
-   externalobject, query, theme, designsystem, usercontrol, urlrewrite. (Para tipos sem tool
-   dedicada: `gx_create_textobject`.)
+   transaction, procedure, sdt, dataprovider, webpanel, menu, domain, dataselector,
+   externalobject, query, theme; e **só no 17/18**: api, designsystem, usercontrol, urlrewrite.
+   (Para tipos sem tool dedicada: `gx_create_textobject`.)
 2. **Validar** com `gx_specify` — devolve o feedback REAL do engine (erros/avisos). SEMPRE leia.
 3. **CRUD web**: `gx_apply_workwithplus` numa Transaction gera Web Panels/filtros.
 4. **Menu**: `gx_create_or_update_menu` liga as telas.

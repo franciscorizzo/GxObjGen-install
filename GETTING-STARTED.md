@@ -59,10 +59,15 @@ porta, ajuste com `claude mcp add`.
 `GXOBJGEN_WRITE=1`** (ex.: no PowerShell: `$env:GXOBJGEN_WRITE=1; & "C:\Program Files (x86)\GeneXus\GeneXus18\genexus.exe"`).
 Confirme com `gx_whoami` (mostra `Modo: leitura+escrita`).
 
-**Tenho o GeneXus 18 Upgrade 14 (ou mais novo) — funciona?**
-A extensão foi validada em GeneXus 17 e 18 U13. Ela declara uma versão de compatibilidade estável
-entre versões, então **deve** carregar em upgrades mais novos. Se o IDE recusar com algo como
-*"cannot load package … expecting version 'X'"*, anote o **X** e reporte — geramos um pacote ajustado.
+**Quais versões do GeneXus são suportadas?**
+GeneXus **15, 17 e 18** (validada em GX15, GX17 e GX18 U13). O `install.ps1` detecta a versão e
+instala a variante certa — o **GX15 usa um DLL próprio** (número de compatibilidade `123130` vs
+`143920` do 17/18). No GX15, 4 tools de objetos que não existem nessa versão (designsystem/api/
+urlrewrite/usercontrol) ficam ocultas; o resto funciona igual.
+
+A extensão declara uma versão de compatibilidade por build do host, então **deve** carregar em
+upgrades próximos. Se o IDE recusar com *"cannot load package … expecting version 'X'"*, anote o
+**X** e reporte — geramos um pacote ajustado.
 
 **Como sei a versão instalada?**
 `gx_whoami` mostra `Extensao GxObjGen: vX.Y.Z`.
@@ -83,5 +88,5 @@ Descobriu um **padrão/dica genérica** que ajudaria qualquer usuário? Use o te
 (ou peça ao Claude *"registra esse aprendizado"*). Ele vira referência nas próximas versões. ⚠️ Só
 conhecimento **genérico** sobre a ferramenta — nunca dados ou lógica da sua KB.
 
-Em qualquer caso, inclua: **versão** (`gx_whoami`), **GeneXus 17/18** (e upgrade), o que você pediu, a
+Em qualquer caso, inclua: **versão** (`gx_whoami`), **GeneXus 15/17/18** (e upgrade), o que você pediu, a
 **mensagem de erro** e o passo para reproduzir. Logs do IDE em `%LOCALAPPDATA%\GeneXus`.

@@ -2,7 +2,41 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.11.5 — atual (beta)
+## 1.12.0 — atual (beta)
+**Suporte ao GeneXus 15** (antes só 17/18). Verificado em runtime: as 73 tools disponíveis no
+GX15 operam de ponta a ponta (load → leitura → CRUD → specify → delete → MSBuild headless).
+
+- **Build por-versão**: `/p:TargetGx=15` aponta o `GxDir` para o GeneXus15 e define a constante
+  `GX15`. O `PackageCompatibility` é **condicional** — `123130` no GX15, `143920` no 17/18. São
+  números de build distintos que o host exige; por isso o **GX15 usa um DLL próprio** (17 e 18
+  seguem compartilhando o mesmo DLL).
+- **Shim de API** (`Gx15Compat.cs`): `KBObject.QN()`/`.TN()` mapeiam `QualifiedNameString`/
+  `TypeName` (ausentes na API mais antiga do GX15) para `QualifiedName.ToString()`/
+  `TypeDescriptor.Name`. Inerte no 17/18 (usa os membros reais).
+- **4 tools ocultas no GX15** (objetos que não existem nessa versão): `gx_create_or_update_`
+  **designsystem** / **api** / **urlrewrite** / **usercontrol** — somem do catálogo via
+  `#if !GX15`. `gx_create_or_update_theme` **permanece** (Theme existe no GX15).
+- **`gx_search_indexed` no GX15**: fallback `new SearchService()` quando o host não expõe o
+  singleton estático `Instance` (caso do GX15) — a busca full-text volta a funcionar.
+- **`install.ps1` detecta o GeneXus 15** e instala a variante certa pela versão MAJOR do
+  `genexus.exe` (`Packages\gx15\` para o GX15; `Packages\` para 17/18).
+- **Painel do IDE — header auto-atualiza** (todas as versões): o cabeçalho `MCP :porta | KB: … |
+  Modo: …` ficava no estado inicial (`MCP :? | KB: (nenhuma)`) até um clique manual em "Status",
+  porque não havia gancho no evento de KB-ligada/MCP-rebindado. Agora ele se recalcula a cada linha
+  de log (idempotente) e mostra a porta/KB corretas assim que há atividade.
+- **Gateway 8780 — robustez contra backends "zumbis"** (issue #20): abrir/fechar KBs podia deixar
+  um socket de LISTEN **herdado** pelo gateway (backend de um GeneXus morto que aceita a conexão mas
+  nunca responde), travando o scan de descoberta e derrubando o `tools/list`. Fix em duas frentes:
+  (1) **backend** marca o socket como **não-herdável** (`SetHandleInformation`), então o gateway não
+  o herda e backend morto = porta fechada = refused imediato; (2) **gateway** descobre as KBs
+  **sob demanda com TTL** (não re-varre a cada request) e checa os backends já conhecidos por
+  **TCP-connect silencioso** (não repete `gx_whoami`, então para de poluir o log do IDE) — o
+  `gx_whoami` só roda para KBs novas; zumbis de crash/versão antiga entram numa blacklist curta.
+  Verificado: com um zumbi na faixa, `tools/list` responde em ~0,5s (antes: timeout); e o gateway
+  não faz mais polling de `gx_whoami` no backend quando ocioso.
+- **Nota**: as tools `gx_wwp_*` exigem **WorkWithPlus instalado** na KB (não é limitação do GX15).
+
+## 1.11.5 (beta)
 Correção da issue #15 (obrigado, @bpessoni!) — gateway 8780 falhava em SILÊNCIO sem Python.
 
 - **Causa raiz documentada**: o gateway multi-KB (porta 8780) é um script Python que a extensão
