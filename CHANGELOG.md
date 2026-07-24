@@ -18,6 +18,13 @@ GX15 operam de ponta a ponta (load → leitura → CRUD → specify → delete �
   `#if !GX15`. `gx_create_or_update_theme` **permanece** (Theme existe no GX15).
 - **`gx_search_indexed` no GX15**: fallback `new SearchService()` quando o host não expõe o
   singleton estático `Instance` (caso do GX15) — a busca full-text volta a funcionar.
+- **MSBuild headless usa a instalação CORRETA do GeneXus** (reorg/build/export/import/schema/…):
+  antes hardcodava `GeneXus18` — no GX15 a reorg rodava mas não limpava a pendência (geradores
+  errados), e no GX17 usava tooling do 18. Agora resolve o diretório do **`genexus.exe` do processo
+  atual**. No GX15 há ainda dois detalhes tratados: o executor da reorg é `gxnet\GXExec.exe` (fora
+  do PATH por padrão) — adicionado ao PATH do processo headless; e o build **in-process**
+  (`GenexusBLServices`) não existe no GX15 — cai automaticamente para o MSBuild. Verificado no GX15:
+  **reorganize execute e compilação (BuildObject) completam com 0 erros**.
 - **`install.ps1` detecta o GeneXus 15** e instala a variante certa pela versão MAJOR do
   `genexus.exe` (`Packages\gx15\` para o GX15; `Packages\` para 17/18).
 - **Painel do IDE — header auto-atualiza** (todas as versões): o cabeçalho `MCP :porta | KB: … |
