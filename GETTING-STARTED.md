@@ -75,6 +75,50 @@ upgrades próximos. Se o IDE recusar com *"cannot load package … expecting ver
 **Várias KBs abertas ao mesmo tempo.**
 Use `gx_targets` para ver os slugs e passe `kb=<slug>` em cada tool. Com uma só KB, `kb` é opcional.
 
+## Permissões recomendadas (`settings.json`)
+O produto chama-se **GxObjGen**, mas o servidor MCP registra-se como **`genexus`** — as tools são
+`mcp__genexus__gx_*` (e **não** `mcp__GxObjGen__*`). Uma regra de permissão com o prefixo errado
+**nunca casa** e dá falsa sensação de segurança. Bloco pronto para colar no `settings.json` do Claude
+Code (auto-aprova as leituras seguras, sempre pergunta nas escritas, e **bloqueia** as duas mais
+perigosas):
+
+```jsonc
+{
+  "permissions": {
+    // AUTO-APROVA: leitura/análise (sem efeito colateral) + specify + export
+    "allow": [
+      "mcp__genexus__gx_whoami", "mcp__genexus__gx_status", "mcp__genexus__gx_telemetry",
+      "mcp__genexus__gx_conventions", "mcp__genexus__gx_overview", "mcp__genexus__gx_modules",
+      "mcp__genexus__gx_datastore", "mcp__genexus__gx_gxserver", "mcp__genexus__gx_gam",
+      "mcp__genexus__gx_list_objects", "mcp__genexus__gx_list_object_types",
+      "mcp__genexus__gx_search", "mcp__genexus__gx_search_indexed", "mcp__genexus__gx_search_in_source",
+      "mcp__genexus__gx_get_object_text", "mcp__genexus__gx_get_properties", "mcp__genexus__gx_doc",
+      "mcp__genexus__gx_analyze", "mcp__genexus__gx_dependencies", "mcp__genexus__gx_read_structure",
+      "mcp__genexus__gx_object_parts", "mcp__genexus__gx_object_api", "mcp__genexus__gx_prop_inspect",
+      "mcp__genexus__gx_var_inspect", "mcp__genexus__gx_layout_tree", "mcp__genexus__gx_object_version",
+      "mcp__genexus__gx_history", "mcp__genexus__gx_attributes", "mcp__genexus__gx_diff",
+      "mcp__genexus__gx_lint", "mcp__genexus__gx_recover", "mcp__genexus__gx_specify",
+      "mcp__genexus__gx_export"
+    ],
+    // BLOQUEIA: irreversível em cascata + escape hatch de MSBuild arbitrário
+    "deny": [
+      "mcp__genexus__gx_delete_cascade",
+      "mcp__genexus__gx_msbuild"
+    ]
+  }
+}
+```
+
+Tudo o que **não** está nas listas cai no **modo padrão de permissão** (normalmente *ask*): é o caso
+de toda a **escrita** (`gx_create_or_update_*`, `gx_edit`, `gx_set_*`, `gx_refactor`,
+`gx_delete_object`, `gx_add_part_item`, `gx_wwp_*`, `gx_layout_set`, `gx_apply_*`, `gx_create_module`/
+`_folder`/`_textobject`) e das operações **pesadas/de ambiente** (`gx_import`, `gx_build`, `gx_run`,
+`gx_test`, `gx_reorganize`, `gx_version`, `gx_schema`, `gx_kb_check`) — todas **perguntam** antes.
+
+> **GeneXus 15:** quatro tools não existem nessa versão e ficam ocultas
+> (`gx_create_or_update_designsystem`/`_api`/`_urlrewrite`/`_usercontrol`) — listá-las seria inócuo
+> (regra que não casa). O bloco acima é version-agnostic.
+
 ## Reportar um bug ou sugestão
 O canal é a aba **Issues** deste repositório. Dois jeitos:
 

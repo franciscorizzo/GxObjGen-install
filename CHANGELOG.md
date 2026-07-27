@@ -41,6 +41,15 @@ GX15 operam de ponta a ponta (load → leitura → CRUD → specify → delete �
   `gx_whoami` só roda para KBs novas; zumbis de crash/versão antiga entram numa blacklist curta.
   Verificado: com um zumbi na faixa, `tools/list` responde em ~0,5s (antes: timeout); e o gateway
   não faz mais polling de `gx_whoami` no backend quando ocioso.
+- **`gx_status` — health/BUSY instantâneo** (issue #19): novo endpoint que responde na hora **mesmo
+  com uma operação longa em andamento** (não passa pela fila da thread de UI). Diz se está OCIOSO ou
+  OCUPADO (qual op, há quanto tempo), uptime, porta, KB e modo — o cliente passa a **distinguir
+  "servidor processando" de "servidor caído"** e decide aguardar vs. abortar (fim do retry às cegas).
+  `gx_specify` agora avisa na descrição que serializa e aponta o `gx_status`. Verificado: durante um
+  reorg em andamento, `gx_status` respondeu em **0,07s** com o estado correto.
+- **Docs: bloco de `permissions` pronto** (issue #17) no GETTING-STARTED — deixa o prefixo correto
+  (`mcp__genexus__`, não `mcp__GxObjGen__`) explícito; auto-aprova leituras, pergunta nas escritas,
+  bloqueia `gx_delete_cascade` e `gx_msbuild`.
 - **Nota**: as tools `gx_wwp_*` exigem **WorkWithPlus instalado** na KB (não é limitação do GX15).
 
 ## 1.11.5 (beta)
