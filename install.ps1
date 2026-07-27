@@ -63,6 +63,57 @@ $ver = ([System.Diagnostics.FileVersionInfo]::GetVersionInfo($dllDefault)).Produ
 Write-Host "GxObjGen v$ver" -ForegroundColor Cyan
 if (-not (Test-Path $dll15)) { Write-Host "AVISO: variante GX15 (Packages\gx15\GxObjGen.dll) ausente — GeneXus 15 sera pulado." -ForegroundColor Yellow }
 
+# [issue #21] O PackageCompatibility e POR BUILD do GeneXus; o DLL vem carimbado com o do build de
+# referencia. Se o host exigir outro numero (ex.: GX15 U8=96640 vs U12=123130), o IDE LISTA a
+# extensao mas a DESABILITA em silencio. Abaixo lemos o numero que o host exige (de um assembly
+# nativo) e, se diferir do declarado no DLL, patchamos os 4 bytes do valor no DLL de destino — assim
+# UM DLL serve qualquer upgrade. Ler o atributo exige reflexao em processo 32-bit (assemblies x86).
+$CompatReader = Join-Path $env:TEMP 'gxobjgen-compat-reader.ps1'
+@'
+param([string]$Dll,[string]$Gx)
+$ErrorActionPreference="SilentlyContinue"
+$onload={param($s,$e)$n=($e.Name -split ",")[0];foreach($d in @("$Gx\$n.dll","$Gx\Packages\$n.dll")){if(Test-Path $d){try{return [Reflection.Assembly]::ReflectionOnlyLoadFrom($d)}catch{}}};return $null}
+[AppDomain]::CurrentDomain.add_ReflectionOnlyAssemblyResolve($onload)
+try{$a=[Reflection.Assembly]::ReflectionOnlyLoadFrom($Dll)}catch{return}
+foreach($c in $a.GetCustomAttributesData()){if($c.AttributeType.Name -eq "PackageCompatibilityAttribute"){($c.NamedArguments|Where-Object{$_.MemberName -eq "Version"}).TypedValue.Value}}
+'@ | Set-Content -Path $CompatReader -Encoding ASCII
+
+function Read-Compat([string]$Dll, [string]$Gx) {
+  if (-not (Test-Path $Dll)) { return $null }
+  $ps32 = Join-Path $env:WINDIR 'SysWOW64\WindowsPowerShell\v1.0\powershell.exe'
+  $psExe = if (Test-Path $ps32) { $ps32 } else { 'powershell.exe' }
+  try {
+    $o = & $psExe -NoProfile -ExecutionPolicy Bypass -File $CompatReader -Dll $Dll -Gx $Gx 2>$null | Select-Object -First 1
+    $n = 0
+    if ([int]::TryParse(("$o").Trim(), [ref]$n)) { return $n }
+  } catch {}
+  return $null
+}
+
+function Set-CompatToHost([string]$DestDll, [string]$Gx) {
+  $hostCompat = Read-Compat (Join-Path $Gx 'Artech.Architecture.Common.dll') $Gx
+  $dllCompat  = Read-Compat $DestDll $Gx
+  if (-not $hostCompat -or -not $dllCompat) {
+    Write-Host "      (nao consegui ler o compat do host/DLL; seguindo com o valor de fabrica)" -ForegroundColor Yellow
+    return
+  }
+  if ($hostCompat -eq $dllCompat) { Write-Host "      compat OK ($dllCompat) — ja bate com o build do host."; return }
+  $bytes = [System.IO.File]::ReadAllBytes($DestDll)
+  $old = [BitConverter]::GetBytes([int]$dllCompat)
+  $new = [BitConverter]::GetBytes([int]$hostCompat)
+  $hits = @()
+  for ($i = 0; $i -le $bytes.Length - 4; $i++) {
+    if ($bytes[$i] -eq $old[0] -and $bytes[$i+1] -eq $old[1] -and $bytes[$i+2] -eq $old[2] -and $bytes[$i+3] -eq $old[3]) { $hits += $i }
+  }
+  if ($hits.Count -eq 1) {
+    $bytes[$hits[0]] = $new[0]; $bytes[$hits[0]+1] = $new[1]; $bytes[$hits[0]+2] = $new[2]; $bytes[$hits[0]+3] = $new[3]
+    [System.IO.File]::WriteAllBytes($DestDll, $bytes)
+    Write-Host "      compat ajustado ao host: $dllCompat -> $hostCompat." -ForegroundColor Green
+  } else {
+    Write-Host "      AVISO: compat nao ajustado (valor $dllCompat aparece $($hits.Count)x no DLL). A extensao pode ficar DESABILITADA no IDE — reporte na issue #21." -ForegroundColor Yellow
+  }
+}
+
 # 2) alvos: -GxDir explicito, ou auto-detecta 17/18 nos caminhos padrao
 if ($GxDir) { $targets = @($GxDir) }
 else {
@@ -87,21 +138,24 @@ foreach ($t in $targets) {
   $open = Get-Process -Name genexus -ErrorAction SilentlyContinue | Where-Object { $_.Path -and ($_.Path -ieq $exe) }
   if ($open) { Write-Host "PULANDO: este GeneXus esta ABERTO (PID $($open.Id -join ', ')). Feche-o e rode de novo." -ForegroundColor Yellow; continue }
 
-  # Escolhe o DLL certo pela versao MAJOR do host (GX15 exige compat 123130).
+  # Escolhe o DLL base pela versao MAJOR do host (o compat exato e ajustado depois da copia).
   $major = (Get-Item $exe).VersionInfo.ProductMajorPart
   if ($major -eq 15) {
     if (-not (Test-Path $dll15)) { Write-Host "PULANDO: GeneXus 15 detectado mas Packages\gx15\GxObjGen.dll ausente." -ForegroundColor Yellow; continue }
     $dll = $dll15
-    Write-Host "Versao detectada: GeneXus 15 -> usando variante GX15 (compat 123130)." -ForegroundColor Cyan
+    Write-Host "Versao detectada: GeneXus 15 -> variante GX15 (compat base 123130; ajusta ao build)." -ForegroundColor Cyan
   } else {
     $dll = $dllDefault
-    Write-Host "Versao detectada: GeneXus $major -> usando DLL padrao (compat 143920)." -ForegroundColor Cyan
+    Write-Host "Versao detectada: GeneXus $major -> DLL padrao (compat base 143920; ajusta ao build)." -ForegroundColor Cyan
   }
 
   Copy-Item $dll -Destination $dest -Force
   $pdb = [System.IO.Path]::ChangeExtension($dll, ".pdb")
   if (Test-Path $pdb) { Copy-Item $pdb -Destination $dest -Force }
   Write-Host "[1/2] Copiado GxObjGen.dll -> $dest"
+
+  # [issue #21] ajusta o PackageCompatibility ao build EXATO do host (patcha o DLL de destino)
+  Set-CompatToHost (Join-Path $dest "GxObjGen.dll") $t
 
   Write-Host "[2/2] Registrando: genexus.exe /install ..."
   $p = Start-Process -FilePath $exe -ArgumentList "/install" -Wait -PassThru -WindowStyle Hidden

@@ -27,6 +27,12 @@ GX15 operam de ponta a ponta (load → leitura → CRUD → specify → delete �
   **reorganize execute e compilação (BuildObject) completam com 0 erros**.
 - **`install.ps1` detecta o GeneXus 15** e instala a variante certa pela versão MAJOR do
   `genexus.exe` (`Packages\gx15\` para o GX15; `Packages\` para 17/18).
+- **Instalador auto-ajusta o `PackageCompatibility` ao build EXATO do host** (issue #21): o número é
+  **por build** do GeneXus (ex.: GX15 **U8 = 96640** vs **U12 = 123130**); quando não bate, o IDE
+  **lista a extensão mas a desabilita em silêncio**. Agora o `install.ps1` lê o número que o host
+  exige (de um assembly nativo, via reflexão 32-bit) e, se diferir, **patcha os 4 bytes do valor no
+  DLL de destino** — um único DLL passa a servir **qualquer upgrade** do GX15 (e evita a classe em
+  futuros U's). Sem efeito no 17/18 (já batem).
 - **Painel do IDE — header auto-atualiza** (todas as versões): o cabeçalho `MCP :porta | KB: … |
   Modo: …` ficava no estado inicial (`MCP :? | KB: (nenhuma)`) até um clique manual em "Status",
   porque não havia gancho no evento de KB-ligada/MCP-rebindado. Agora ele se recalcula a cada linha
