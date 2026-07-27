@@ -66,9 +66,13 @@ Code **dentro da pasta clonada** para ele carregar automaticamente:
   Sem ela, qualquer tool de escrita é bloqueada com aviso.
 - Tudo é **loopback** (`127.0.0.1`): nada sai da sua máquina, não há API key, não há upload da KB.
 
-## Novidades desta versão (1.12.0)
+## Novidades desta versão (1.12.1)
 > Histórico completo de todas as versões em [`CHANGELOG.md`](CHANGELOG.md).
 
+- **(1.12.1) GX15 carrega em qualquer upgrade** (issue #21): o `PackageCompatibility` é por build
+  (ex.: GX15 **U8 = 96640** vs **U12 = 123130**); quando não bate, o IDE lista a extensão mas a
+  **desabilita em silêncio**. O `install.ps1` agora **auto-ajusta o compat ao build exato do host** —
+  a extensão carrega em U8, U9, U12… sem DLL por versão. Verificado no **GX15 U8 real**.
 - **Suporte ao GeneXus 15** 🎉 (antes só 17/18) — verificado em runtime: as 73 tools disponíveis
   no GX15 operam de ponta a ponta. O GX15 usa um **DLL próprio** (`PackageCompatibility` 123130 vs
   143920 do 17/18); o `install.ps1` detecta a versão e instala a variante certa automaticamente.

@@ -2,7 +2,15 @@
 
 Versionamento SemVer. A versão instalada aparece em `gx_whoami` (`Extensao GxObjGen: vX.Y.Z`).
 
-## 1.12.0 — atual (beta)
+## 1.12.1 — atual (beta)
+**Onda GeneXus 15.** Se você já tinha uma **1.12.0**, o **delta que importa é o fix do #21**: o
+`install.ps1` agora **auto-ajusta o `PackageCompatibility` ao build EXATO do host**, então a extensão
+passa a **carregar em qualquer upgrade** do GX15 (U8, U9, U12…), não só o build de referência.
+Verificado no **GX15 U8 real** (build 15.0.8.119728): install → uninstall → reinstall → load → smoke,
+tudo OK. Também nesta onda: `gx_status` (#19), MSBuild headless usando a instalação correta do GeneXus,
+e o bloco de `permissions` (#17). **Bump só para sinalizar a atualização** — o DLL em si é igual ao
+1.12.0; o fix do #21 vive no instalador. Detalhes abaixo.
+
 **Suporte ao GeneXus 15** (antes só 17/18). Verificado em runtime: as 73 tools disponíveis no
 GX15 operam de ponta a ponta (load → leitura → CRUD → specify → delete → MSBuild headless).
 
